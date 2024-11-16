@@ -1,6 +1,8 @@
 package com.angelodev.screenmatch;
 
+import com.angelodev.screenmatch.modelo.DatosSerie;
 import com.angelodev.screenmatch.service.ConsumoAPI;
+import com.angelodev.screenmatch.service.ConvierteDatos;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,5 +19,8 @@ public class ScreenmatchApplication implements CommandLineRunner {
 		var consumoApi = new ConsumoAPI();
 		var json = consumoApi.obtenerDatos("http://www.omdbapi.com/?t=silicon+valley&apikey=4912ae8");
 		System.out.println(json);
+		ConvierteDatos conversor = new ConvierteDatos();
+		var datos = conversor.obtenerDatos(json, DatosSerie.class);
+		System.out.println("Los datos son los siguientes: " + datos);
 	}
 }
