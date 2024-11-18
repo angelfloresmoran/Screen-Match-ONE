@@ -11,7 +11,7 @@ public record DatosTemporada(
 
         @JsonAlias("Season") Integer numero,
 
-        @JsonAlias("Episodes") List <DatosEpisodio> episodios
+        @JsonAlias("Episodes") List<DatosEpisodio> episodios
 ) {
 
 }

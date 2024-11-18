@@ -13,7 +13,7 @@ public record DatosSerie(
 
         @JsonAlias("Plot") String descripcion,
 
-        @JsonAlias("totalSeasons") String totalTemporadas,
+        @JsonAlias("totalSeasons") int totalTemporadas,
 
         @JsonAlias("imdbRating") String evaluacion
 ) {
