@@ -1,5 +1,6 @@
 package com.angelodev.screenmatch;
 
+import com.angelodev.screenmatch.modelo.DatosEpisodio;
 import com.angelodev.screenmatch.modelo.DatosSerie;
 import com.angelodev.screenmatch.service.ConsumoAPI;
 import com.angelodev.screenmatch.service.ConvierteDatos;
@@ -22,5 +23,9 @@ public class ScreenmatchApplication implements CommandLineRunner {
 		ConvierteDatos conversor = new ConvierteDatos();
 		var datos = conversor.obtenerDatos(json, DatosSerie.class);
 		System.out.println("Los datos son los siguientes: " + datos);
+
+		json = consumoApi.obtenerDatos("http://www.omdbapi.com/?t=silicon+valley&season=1&episode=1&apikey=4912ae8");
+		DatosEpisodio datosEpisodio = conversor.obtenerDatos(json, DatosEpisodio.class);
+		System.out.println(datosEpisodio);
 	}
 }
