@@ -1,9 +1,6 @@
 package com.angelodev.screenmatch.principal;
 
-import com.angelodev.screenmatch.modelo.DatosEpisodio;
-import com.angelodev.screenmatch.modelo.DatosSerie;
-import com.angelodev.screenmatch.modelo.DatosTemporada;
-import com.angelodev.screenmatch.modelo.Episodio;
+import com.angelodev.screenmatch.modelo.*;
 import com.angelodev.screenmatch.service.ConsumoAPI;
 import com.angelodev.screenmatch.service.ConvierteDatos;
 
@@ -23,6 +20,8 @@ public class Principal {
     private final String API_KEY = "&apikey=4912ae8";
 
     private ConvierteDatos conversor = new ConvierteDatos();
+
+    private List <DatosSerie> datosSeries = new ArrayList<>();
 
     private String menu = """
             (1) Mostrar los titulos de todos los episodios de la serie. 
@@ -52,7 +51,9 @@ public class Principal {
                 case 2:
                     buscarEpisodioPorSerie();
                     break;
-
+                case 3:
+                    mostrarSeriesBuscadas();
+                    break;
                 case 0:
                     System.out.println("Cerrando la aplicación...");
                     break;
@@ -71,6 +72,7 @@ public class Principal {
         DatosSerie datos = conversor.obtenerDatos(json, DatosSerie.class);
         return datos;
     }
+
     private void buscarEpisodioPorSerie() {
         DatosSerie datosSerie = getDatosSerie();
         List<DatosTemporada> temporadas = new ArrayList<>();
@@ -82,9 +84,21 @@ public class Principal {
         }
         temporadas.forEach(System.out::println);
     }
+
     private void buscarSerieWeb() {
         DatosSerie datos = getDatosSerie();
+        datosSeries.add(datos);
         System.out.println(datos);
+    }
+
+    private void mostrarSeriesBuscadas() {
+        List <Serie> historialSeriesBuscadas = new ArrayList<>();
+        historialSeriesBuscadas = datosSeries.stream()
+                .map(d -> new Serie(d))
+                .collect(Collectors.toList());
+        historialSeriesBuscadas.stream()
+                .sorted(Comparator.comparing(Serie::getGenero))
+                .forEach(System.out::println);
     }
 
 }
