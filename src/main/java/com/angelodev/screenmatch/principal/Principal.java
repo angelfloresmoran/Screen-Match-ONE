@@ -1,6 +1,7 @@
 package com.angelodev.screenmatch.principal;
 
 import com.angelodev.screenmatch.modelo.*;
+import com.angelodev.screenmatch.repository.SerieRepository;
 import com.angelodev.screenmatch.service.ConsumoAPI;
 import com.angelodev.screenmatch.service.ConvierteDatos;
 
@@ -29,6 +30,12 @@ public class Principal {
             """;
 
     private int opcionMenu = 0;
+
+    private SerieRepository repositorio;
+
+    public Principal(SerieRepository repository) {
+        this.repositorio = repository;
+    }
 
     public void muestraElMenu() {
         var opcion = -1;
@@ -87,7 +94,9 @@ public class Principal {
 
     private void buscarSerieWeb() {
         DatosSerie datos = getDatosSerie();
-        datosSeries.add(datos);
+        //datosSeries.add(datos);
+        Serie serie = new Serie(datos);
+        repositorio.save(serie);
         System.out.println(datos);
     }
 

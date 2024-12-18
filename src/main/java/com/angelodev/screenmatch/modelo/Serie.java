@@ -1,16 +1,26 @@
 package com.angelodev.screenmatch.modelo;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
+
+@Entity
+@Table(name="series")
 public class Serie {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, name = "titulo_serie")
     private String titulo;
 
     private String actores;
 
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
 
     private String poster;
@@ -21,6 +31,9 @@ public class Serie {
 
     private String descripcion;
 
+    @Transient
+    private List<Episodio> episodios;
+
     public Serie(DatosSerie datosSerie){
         this.titulo = datosSerie.titulo();
         this.actores = datosSerie.actores();
@@ -28,7 +41,16 @@ public class Serie {
         this.poster = datosSerie.poster();
         this.totalTemporadas = OptionalInt.of(Integer.valueOf(datosSerie.totalTemporadas())).orElse(0);
         this.evaluacion = OptionalDouble.of(Double.valueOf(datosSerie.evaluacion())).orElse(0);
-        this.descripcion = datosSerie.descripcion();
+        this.descripcion=datosSerie.descripcion();
+        //Traducción de ChatGPT//this.descripcion = ConsultaChatGPT.obtenerTraduccion(datosSerie.descripcion());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitulo() {
