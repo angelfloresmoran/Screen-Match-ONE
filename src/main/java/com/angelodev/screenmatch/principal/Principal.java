@@ -101,10 +101,11 @@ public class Principal {
     }
 
     private void mostrarSeriesBuscadas() {
-        List <Serie> historialSeriesBuscadas = new ArrayList<>();
-        historialSeriesBuscadas = datosSeries.stream()
-                .map(d -> new Serie(d))
-                .collect(Collectors.toList());
+        List <Serie> historialSeriesBuscadas = repositorio.findAll();
+//                new ArrayList<>();
+//        historialSeriesBuscadas = datosSeries.stream()
+//                .map(d -> new Serie(d))
+//                .collect(Collectors.toList());
         historialSeriesBuscadas.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);
