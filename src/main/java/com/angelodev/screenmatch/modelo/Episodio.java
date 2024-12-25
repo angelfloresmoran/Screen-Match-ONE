@@ -1,9 +1,17 @@
 package com.angelodev.screenmatch.modelo;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+@Entity
+@Table(name = "episodios")
 public class Episodio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private Integer temporada;
 
@@ -14,6 +22,11 @@ public class Episodio {
     private Double evaluacion;
 
     private LocalDate fechaLanzamiento;
+
+    @ManyToOne
+    private Serie serie;
+    //Constructor predeterminado
+    public Episodio(){}
 
     public Episodio(Integer numero, DatosEpisodio d) {
         this.temporada = numero;
@@ -30,6 +43,14 @@ public class Episodio {
             this.fechaLanzamiento=null;
         }
 
+    }
+
+    public Serie getSerie() {
+        return serie;
+    }
+
+    public void setSerie(Serie serie) {
+        this.serie = serie;
     }
 
     public Integer getTemporada() {
