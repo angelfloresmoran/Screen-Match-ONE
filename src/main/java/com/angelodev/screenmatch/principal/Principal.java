@@ -5,6 +5,7 @@ import com.angelodev.screenmatch.repository.SerieRepository;
 import com.angelodev.screenmatch.service.ConsumoAPI;
 import com.angelodev.screenmatch.service.ConvierteDatos;
 
+import java.text.BreakIterator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -28,6 +29,8 @@ public class Principal {
 
     private List<Serie> series;
 
+    private Optional<Serie> serieBuscada;
+
     public Principal(SerieRepository repository) {
         this.repositorio = repository;
     }
@@ -43,6 +46,8 @@ public class Principal {
                     5 - Buscar top 5 series
                     6 - Buscar Series por cateforia
                     7 - Buscar Series con un máximos de 3 temporadas
+                    8 - Buscar serie por nombre de episodio
+                    9 - Top 5 episodios por Serie
                                   
                     0 - Salir
                     """;
@@ -72,6 +77,11 @@ public class Principal {
                 case 7:
                     buscarTotalTemp3();
                     break;
+                case 8:
+                    buscarEpisodioPorTitulo();
+                    break;
+                case 9:
+                    top5EpisodiosPorSerie();
                 case 0:
                     System.out.println("Cerrando la aplicación...");
                     break;
@@ -142,7 +152,7 @@ public class Principal {
     private void buscarSeriesPorTitulo(){
         System.out.println("Escribe el nombre de la serie que deseas buscar:");
         var nombreSerie = teclado.nextLine();
-        Optional<Serie> serieBuscada = repositorio.findByTituloContainsIgnoreCase(nombreSerie);
+        serieBuscada= repositorio.findByTituloContainsIgnoreCase(nombreSerie);
 
         if (serieBuscada.isPresent()){
             System.out.println("La serie buscada es: " + serieBuscada.get());
@@ -172,10 +182,32 @@ public class Principal {
         System.out.println("Ingrese la valoración de la serie aceptable");
         var calificacionAceptable = teclado.nextDouble();
 
-        List<Serie> seriesTope3 = repositorio.findByTotalTemporadasLessThanEqualAndEvaluacionGreaterThanEqual(limiteTemporadas, calificacionAceptable);
+        List<Serie> filtroSeries = repositorio.seriesPorTemporadaYEvaluacion(limiteTemporadas, calificacionAceptable);
 
-        System.out.println("Las series que cumplen los parámetros son: " + seriesTope3);
+        System.out.println("**Series Filtradas ***");
+        filtroSeries.forEach(s ->
+                System.out.println(s.getTitulo() + " Evaluación " + s.getEvaluacion()));
+    }
 
+    private void buscarEpisodioPorTitulo(){
+        System.out.println("Escribe el nombre del episodio que deseas buscar");
+        var nombreEpisodio = teclado.nextLine();
+
+        List<Episodio> episodiosEncontrados = repositorio.episodioPorNombre(nombreEpisodio);
+        episodiosEncontrados.forEach(e->
+                System.out.printf(" Serie: %s - Temporada %s - Episodio %s - Nombre: %s - Evaluación %s\n",
+                        e.getSerie().getTitulo(), e.getTemporada(), e.getNumeroEpisodio(), e.getTitulo(), e.getEvaluacion()));
+    }
+
+    private void top5EpisodiosPorSerie(){
+        buscarSeriesPorTitulo();
+        if (serieBuscada.isPresent()){
+            Serie serie = serieBuscada.get();
+            List<Episodio> topEpisodios = repositorio.top5Episodios(serie);
+            topEpisodios.forEach(e->
+                    System.out.printf(" Serie: %s - Temporada %s - Episodio %s - Nombre: %s -  Evaluación %s\n",
+                            e.getSerie().getTitulo(), e.getTemporada(), e.getNumeroEpisodio(), e.getTitulo(), e.getEvaluacion()));
+        }
     }
 
 }
